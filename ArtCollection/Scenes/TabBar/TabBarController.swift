@@ -18,7 +18,7 @@ final class TabBarController: UITabBarController {
     private func setupTabBar() {
         let homeViewController = setupHomeVewController()
 
-        viewControllers = []
+        viewControllers = [homeViewController]
     }
 
     //MARK: - View Controllers
