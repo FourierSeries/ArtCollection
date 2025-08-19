@@ -73,12 +73,7 @@ final class OnboardingViewController: UIViewController {
 
     @objc
     private func didTapActionButton() {
-        UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut], animations: {
-            self.view.alpha = 0
-        }, completion: { _ in
-            self.view.removeFromSuperview()
-            self.removeFromParent()
-        })
+        delegate?.didTapActionButton()
     }
 
     // MARK: - Layout
