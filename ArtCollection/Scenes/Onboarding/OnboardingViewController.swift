@@ -110,7 +110,7 @@ final class OnboardingViewController: UIViewController {
         descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 21).isActive = true
         descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -21).isActive = true
 
-        actionButton.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 200).isActive = true
+        actionButton.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 400).isActive = true
         actionButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22).isActive = true
         actionButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22).isActive = true
         actionButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -80).isActive = true
