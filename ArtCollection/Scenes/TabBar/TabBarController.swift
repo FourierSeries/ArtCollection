@@ -43,7 +43,6 @@ final class TabBarController: UITabBarController {
     // MARK: - View Controllers
     func setupHomeVewController() -> UIViewController {
         let viewController = HomeViewController()
-        viewController.title = "ArtCollection"
         
         let navigationController = UINavigationController(rootViewController: viewController)
         navigationController.navigationBar.prefersLargeTitles = true
