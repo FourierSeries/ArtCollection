@@ -12,7 +12,6 @@ final class HomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         view.backgroundColor = .systemGray6
 
         setupCustomNavigationBar()
@@ -82,8 +81,9 @@ final class HomeViewController: UIViewController {
         navBarView.addSubview(topStackView)
         navBarView.addSubview(searchBar)
 
-        // Устанавливаем констрейнты: для navBarView
+        // Устанавливаем констрейнты:
         NSLayoutConstraint.activate([
+            //Для navBarView
             navBarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             navBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             navBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
