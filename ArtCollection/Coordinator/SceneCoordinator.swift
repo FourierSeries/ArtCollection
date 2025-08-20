@@ -21,23 +21,6 @@ final class SceneCoordinator {
 //            window.rootViewController = makeOnboarding()
 //        }
 
-//    guard let windowScene = (scene as? UIWindowScene) else { return }
-//
-//            let window = UIWindow(windowScene: windowScene)
-//            let homeViewController = HomeViewController()
-//            let onboardingViewController = OnboardingViewController()
-//
-//            // Добавляем HomeViewController как корневой
-//            window.rootViewController = homeViewController
-//
-//            // Добавляем OnboardingViewController поверх HomeViewController
-//            homeViewController.view.addSubview(onboardingViewController.view)
-//            homeViewController.addChild(onboardingViewController)
-//            onboardingViewController.didMove(toParent: homeViewController)
-//
-//            self.window = window
-//            window.makeKeyAndVisible()
-
     func start() {
         window.rootViewController = makeOnboarding()
 
@@ -54,11 +37,11 @@ final class SceneCoordinator {
         mainViewController.view.addSubview(snapshot)
         window.rootViewController = mainViewController
 
-        UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut], animations: {
+        UIView.animate(withDuration: 0.3) {
             snapshot.alpha = 0
-        }, completion: { _ in
+        } completion: { _ in
             snapshot.removeFromSuperview()
-        })
+        }
     }
 }
 
@@ -71,8 +54,7 @@ extension SceneCoordinator: OnboardingDelegate {
 private extension SceneCoordinator {
 
     func makeMain() -> UIViewController {
-
-        return HomeViewController()
+        return TabBarController()
     }
 
     func makeOnboarding() -> UIViewController {
