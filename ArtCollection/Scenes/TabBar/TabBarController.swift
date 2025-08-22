@@ -56,7 +56,6 @@ final class TabBarController: UITabBarController {
 
     func setupSettingsVewController() -> UIViewController {
         let viewController = ProfileViewController()
-        viewController.title = "Profile"
 
         let navigationController = UINavigationController(rootViewController: viewController)
         navigationController.navigationBar.prefersLargeTitles = true
