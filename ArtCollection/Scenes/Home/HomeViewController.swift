@@ -486,30 +486,24 @@ final class HomeViewController: UIViewController {
     private func loadImage(from url: URL) {
         currentTask?.cancel()
 
-        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            guard let self = self else { return }
-            guard let data = data, error == nil, let image = UIImage(data: data) else {
-                print("Failed to load image")
-                DispatchQueue.main.async {
-                    // Обновляем интерфейс в случае ошибки загрузки изображения
-                    self.loadingImageView.isHidden = true
-                    self.objectView.isHidden = false
-                    self.placeholderImageView.isHidden = false
-                    self.randomButton.isEnabled = true
-                    self.randomButton.layer.borderColor = UIColor.black.cgColor
-                }
-                return
-            }
+        ImageAPI.loadImage(from: url) { [weak self] result in
             DispatchQueue.main.async {
-                // Обновляем интерфейс после успешной загрузки изображения
-                self.objectImageView.image = image
-                self.randomButton.isEnabled = true
-                self.randomButton.layer.borderColor = UIColor.black.cgColor
-                self.loadingImageView.isHidden = true
-                self.objectView.isHidden = false
+                switch result {
+                case .success(let image):
+                    self?.objectImageView.image = image
+                    self?.randomButton.isEnabled = true
+                    self?.loadingImageView.isHidden = true
+                    self?.placeholderImageView.isHidden = true
+                    self?.objectView.isHidden = false
+                case .failure(let error):
+                    print("Failed to load image: \(error.localizedDescription)")
+                    // Обновляем интерфейс в случае ошибки загрузки изображения
+                    self?.loadingImageView.isHidden = true
+                    self?.objectView.isHidden = false
+                    self?.placeholderImageView.isHidden = false
+                    self?.randomButton.isEnabled = true
+                }
             }
         }
-        currentTask = task
-        task.resume()
     }
 }
