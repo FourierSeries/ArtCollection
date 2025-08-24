@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol HomeDelegate: AnyObject {
+    func didTapInfoButton(modal: Bool)
+}
+
 final class HomeViewController: UIViewController {
 
     // MARK: - Private Properties
@@ -38,6 +42,8 @@ final class HomeViewController: UIViewController {
     private let classificationLabel = UIButton(type: .system)
     private let heartButton = UIButton(type: .system)
     private let infoButton = UIButton(type: .system)
+
+    weak var delegate: HomeDelegate?
 
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -185,9 +191,16 @@ final class HomeViewController: UIViewController {
         infoButton.tintColor = .black
         objectView.addSubview(infoButton)
 
-        let tapGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
-        tapGesture.minimumPressDuration = 0.1
-        objectView.addGestureRecognizer(tapGesture)
+        // Переход на экран с детальной информацией
+        infoButton.addTarget(self, action: #selector(didTapInfoButton), for: .touchUpInside)
+
+        let longTapGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+        longTapGesture.minimumPressDuration = 0.2
+        objectView.addGestureRecognizer(longTapGesture)
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapCard))
+            objectView.addGestureRecognizer(tapGesture)
+            objectView.isUserInteractionEnabled = true
     }
 
     // MARK: - Layout
@@ -339,6 +352,16 @@ final class HomeViewController: UIViewController {
         loadingImageView.isHidden = false
 
         fetchArtObjectIfNeeded()
+    }
+
+    @objc private func didTapInfoButton() {
+        // Открываем модальное окно, если тап был на кнопку информации
+        delegate?.didTapInfoButton(modal: true)
+    }
+
+    @objc private func didTapCard() {
+        // Открываем в полноэкранном режиме, если тап был на всю карточку
+        delegate?.didTapInfoButton(modal: false)
     }
 
     //MARK: Update Labels
