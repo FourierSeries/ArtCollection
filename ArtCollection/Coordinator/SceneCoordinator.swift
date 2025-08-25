@@ -9,7 +9,7 @@ import UIKit
 
 final class SceneCoordinator {
     private let window: UIWindow
-    private var navigationController: UINavigationController?
+    private weak var navigationController: UINavigationController?
     private weak var currentViewController: UIViewController?
 
     init(window: UIWindow) {
