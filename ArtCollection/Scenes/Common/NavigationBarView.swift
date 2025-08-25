@@ -15,7 +15,7 @@ final class CustomNavigationBar: UIView {
     // MARK: - UI Elements
     private let imageView = UIImageView(image: UIImage(named: "homeview_image"))
     private let titleLabel = UILabel()
-    let randomButton = UIButton(type: .system)
+    private let randomButton = UIButton(type: .system)
     private let searchBar = UISearchBar()
     private let topStackView: UIStackView = {
         let stackView = UIStackView()
@@ -75,23 +75,19 @@ final class CustomNavigationBar: UIView {
         randomButton.addTarget(self, action: #selector(didTapRandomButton), for: .touchUpInside)
     }
 
-    @objc private func didTapRandomButton() {
-            onRandomButtonTapped?()
-        }
-
     private func setupLayout() {
         topStackView.translatesAutoresizingMaskIntoConstraints = false
         searchBar.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            topStackView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-            topStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            topStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            topStackView.topAnchor.constraint(equalTo: topAnchor, constant: Constants.topStackViewMargin),
+            topStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.topStackViewMargin),
+            topStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.topStackViewMargin),
 
-            searchBar.topAnchor.constraint(equalTo: topStackView.bottomAnchor, constant: 8),
-            searchBar.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-            searchBar.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            searchBar.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
+            searchBar.topAnchor.constraint(equalTo: topStackView.bottomAnchor, constant: Constants.searchBarMargin),
+            searchBar.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.searchBarMargin),
+            searchBar.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.searchBarMargin),
+            searchBar.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.searchBarMargin),
             searchBar.heightAnchor.constraint(equalToConstant: 36),
 
             imageView.widthAnchor.constraint(equalToConstant: 34),
@@ -101,13 +97,41 @@ final class CustomNavigationBar: UIView {
             randomButton.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
+}
 
-    //     MARK: - Button Actions
-        @objc private func buttonTouchDown() {
-            randomButton.layer.borderColor = UIColor.lightGray.cgColor // Изменяем цвет границы при нажатии
-        }
+// MARK: - Internal Methods
 
-        @objc private func buttonTouchUp() {
-            randomButton.layer.borderColor = UIColor.black.cgColor // Возвращаем цвет границы при отпускании
-        }
+extension CustomNavigationBar {
+
+    func setRandomButtonEnabled(_ enabled: Bool) {
+        randomButton.isEnabled = enabled
+    }
+
+    func setBorderColor(_ color: UIColor) {
+        randomButton.layer.borderColor = color.cgColor
+    }
+}
+
+// MARK: - Button Actions
+
+private extension CustomNavigationBar {
+
+    @objc func buttonTouchDown() {
+        randomButton.layer.borderColor = UIColor.lightGray.cgColor // Изменяем цвет границы при нажатии
+    }
+
+    @objc func buttonTouchUp() {
+        randomButton.layer.borderColor = UIColor.black.cgColor // Возвращаем цвет границы при отпускании
+    }
+
+    @objc private func didTapRandomButton() {
+        onRandomButtonTapped?()
+    }
+}
+
+private extension CustomNavigationBar {
+    struct Constants {
+        static let topStackViewMargin: CGFloat = 16
+        static let searchBarMargin: CGFloat = 8
+    }
 }

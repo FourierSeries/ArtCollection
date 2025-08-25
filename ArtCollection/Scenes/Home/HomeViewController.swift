@@ -351,8 +351,8 @@ final class HomeViewController: UIViewController {
             self.loadingImageView.isHidden = true
             self.objectView.isHidden = false
             self.placeholderImageView.isHidden = false
-            self.customNavBar.randomButton.isEnabled = true
-            self.customNavBar.randomButton.layer.borderColor = UIColor.black.cgColor
+            self.customNavBar.setRandomButtonEnabled(true)
+            self.customNavBar.setBorderColor(UIColor.black)
         }
     }
 
@@ -396,7 +396,7 @@ final class HomeViewController: UIViewController {
                 switch result {
                 case .success(let image):
                     self?.objectImageView.image = image
-                    self?.customNavBar.randomButton.isEnabled = true
+                    self?.customNavBar.setRandomButtonEnabled(true)
                     self?.loadingImageView.isHidden = true
                     self?.placeholderImageView.isHidden = true
                     self?.objectView.isHidden = false
@@ -406,7 +406,7 @@ final class HomeViewController: UIViewController {
                     self?.loadingImageView.isHidden = true
                     self?.objectView.isHidden = false
                     self?.placeholderImageView.isHidden = false
-                    self?.customNavBar.randomButton.isEnabled = true
+                    self?.customNavBar.setRandomButtonEnabled(true)
                 }
             }
         }
