@@ -9,6 +9,8 @@ import UIKit
 
 final class SceneCoordinator {
     private let window: UIWindow
+    private var navigationController: UINavigationController?
+    private weak var currentViewController: UIViewController?
 
     init(window: UIWindow) {
         self.window = window
@@ -22,7 +24,9 @@ final class SceneCoordinator {
 //        }
 
     func start() {
-        window.rootViewController = makeOnboarding()
+        let onboardingViewController = makeOnboarding()
+        window.rootViewController = onboardingViewController
+        currentViewController = onboardingViewController
 
         window.makeKeyAndVisible()
     }
@@ -36,6 +40,7 @@ final class SceneCoordinator {
 
         mainViewController.view.addSubview(snapshot)
         window.rootViewController = mainViewController
+        currentViewController = mainViewController
 
         UIView.animate(withDuration: 0.3) {
             snapshot.alpha = 0
@@ -50,16 +55,27 @@ final class SceneCoordinator {
         if modal {
             // Открыть модально
             detailsViewController.modalPresentationStyle = .pageSheet
-            topMostViewController()?.present(detailsViewController, animated: true, completion: nil)
+            getCurrentViewController()?.present(detailsViewController, animated: true, completion: { [weak self] in
+                self?.currentViewController = detailsViewController
+            })
         } else {
             // Открыть в полноэкранном режиме
-            if let navigationController = topMostViewController()?.navigationController {
+            if let navigationController = self.navigationController {
                 navigationController.pushViewController(detailsViewController, animated: true)
+                self.currentViewController = detailsViewController
             } else {
-            // Если нет навигационного контроллера, открыть модально как запасной вариант
-                topMostViewController()?.present(detailsViewController, animated: true, completion: nil)
+                // Логируем для отладки. Если нет навигационного контроллера, открыть модально как запасной вариант
+                assertionFailure("Попытка push без UINavigationController, открываем DetailsViewController модально")
+                getCurrentViewController()?.present(detailsViewController, animated: true, completion: { [weak self] in
+                    self?.currentViewController = detailsViewController
+                })
             }
         }
+    }
+
+    // Используем currentViewController, если он есть
+    private func getCurrentViewController() -> UIViewController? {
+        return currentViewController ?? topMostViewController()
     }
 
     // Функция для получения текущего видимого контроллера
@@ -107,6 +123,9 @@ private extension SceneCoordinator {
             if let homeNavController = tabBarController.viewControllers?.first as? UINavigationController,
                let homeViewController = homeNavController.viewControllers.first as? HomeViewController {
                 homeViewController.delegate = self
+                // Сохраняем navigationController
+                self.navigationController = homeNavController
+                self.currentViewController = homeNavController
             }
 
             return tabBarController
