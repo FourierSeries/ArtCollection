@@ -68,8 +68,8 @@ final class CustomNavigationBar: UIView {
         addSubview(searchBar)
 
         // Добавляем обработчики событий для изменения цвета границы
-                randomButton.addTarget(self, action: #selector(buttonTouchDown), for: .touchDown)
-                randomButton.addTarget(self, action: #selector(buttonTouchUp), for: [.touchUpInside, .touchUpOutside, .touchCancel])
+        randomButton.addTarget(self, action: #selector(buttonTouchDown), for: .touchDown)
+        randomButton.addTarget(self, action: #selector(buttonTouchUp), for: [.touchUpInside, .touchUpOutside, .touchCancel])
 
         // Обработчик для нажатия
         randomButton.addTarget(self, action: #selector(didTapRandomButton), for: .touchUpInside)
@@ -78,6 +78,12 @@ final class CustomNavigationBar: UIView {
     private func setupLayout() {
         topStackView.translatesAutoresizingMaskIntoConstraints = false
         searchBar.translatesAutoresizingMaskIntoConstraints = false
+
+        // Настраиваем отступы у иконки, кнопки и кэпшна внутри
+        randomButton.imageView?.contentMode = .scaleAspectFit
+        randomButton.imageEdgeInsets = UIEdgeInsets(top: 5, left: -5, bottom: 5, right: 10)
+        randomButton.titleEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
+        randomButton.contentEdgeInsets = UIEdgeInsets(top: 7, left: 5, bottom: 7, right: 5)
 
         NSLayoutConstraint.activate([
             topStackView.topAnchor.constraint(equalTo: topAnchor, constant: Constants.topStackViewMargin),

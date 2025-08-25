@@ -10,6 +10,7 @@ import UIKit
 final class HomeViewController: UIViewController {
 
     // MARK: - Private Properties
+    private let topBackgroundView = UIView()
     private let customNavBar = CustomNavigationBar()
 
     private let objectView = UIView()
@@ -54,6 +55,9 @@ final class HomeViewController: UIViewController {
     }
 
     private func setupCustomNavigationBar() {
+        // Настраиваем область для кастомного навбара
+        topBackgroundView.backgroundColor = .systemBackground
+        view.addSubview(topBackgroundView)
         view.addSubview(customNavBar)
     }
 
@@ -142,6 +146,7 @@ final class HomeViewController: UIViewController {
 
     // MARK: - Layout
     private func setupLayout() {
+        topBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         customNavBar.translatesAutoresizingMaskIntoConstraints = false
 
         objectView.translatesAutoresizingMaskIntoConstraints = false
@@ -158,6 +163,13 @@ final class HomeViewController: UIViewController {
 
         // Устанавливаем констрейнты:
         NSLayoutConstraint.activate([
+
+            // Для сейфзоны сверху
+            topBackgroundView.topAnchor.constraint(equalTo: view.topAnchor),
+            topBackgroundView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            topBackgroundView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            topBackgroundView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+
             // Для navBarView
             customNavBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             customNavBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),

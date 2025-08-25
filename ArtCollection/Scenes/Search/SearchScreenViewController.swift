@@ -10,6 +10,7 @@ import UIKit
 final class SearchScreenViewController: UIViewController {
 
     // MARK: - Private Properties
+    private let topBackgroundView = UIView()
     private let customNavBar = CustomNavigationBar()
 
     override func viewDidLoad() {
@@ -26,15 +27,24 @@ final class SearchScreenViewController: UIViewController {
     }
 
     private func setupCustomNavigationBar() {
+        // Настраиваем область для кастомного навбара
+        topBackgroundView.backgroundColor = .systemBackground
+        view.addSubview(topBackgroundView)
         view.addSubview(customNavBar)
     }
 
     // MARK: - Layout
     private func setupLayout() {
+        topBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         customNavBar.translatesAutoresizingMaskIntoConstraints = false
 
         // Устанавливаем констрейнты:
         NSLayoutConstraint.activate([
+            // Для сейфзоны сверху
+            topBackgroundView.topAnchor.constraint(equalTo: view.topAnchor),
+            topBackgroundView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            topBackgroundView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            topBackgroundView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
 
             // Для navBarView
             customNavBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
