@@ -238,6 +238,7 @@ final class HomeViewController: UIViewController {
         // Очищаем изображения и показываем индикатор загрузки
         objectImageView.image = nil
         loadingImageView.image = nil
+        self.customNavBar.setRandomButtonEnabled(false)
 
         // Скрываем objectView и показываем loadingImageView
         objectView.isHidden = true
@@ -352,7 +353,6 @@ final class HomeViewController: UIViewController {
             self.objectView.isHidden = false
             self.placeholderImageView.isHidden = false
             self.customNavBar.setRandomButtonEnabled(true)
-            self.customNavBar.setBorderColor(UIColor.black)
         }
     }
 

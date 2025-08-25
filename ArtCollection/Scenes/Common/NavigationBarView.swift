@@ -105,11 +105,9 @@ extension CustomNavigationBar {
 
     func setRandomButtonEnabled(_ enabled: Bool) {
         randomButton.isEnabled = enabled
+        randomButton.layer.borderColor = enabled ? UIColor.black.cgColor : UIColor.lightGray.cgColor
     }
-
-    func setBorderColor(_ color: UIColor) {
-        randomButton.layer.borderColor = color.cgColor
-    }
+    
 }
 
 // MARK: - Button Actions
