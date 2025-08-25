@@ -90,8 +90,8 @@ final class CustomNavigationBar: UIView {
             searchBar.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.searchBarMargin),
             searchBar.heightAnchor.constraint(equalToConstant: 36),
 
-            imageView.widthAnchor.constraint(equalToConstant: 34),
-            imageView.heightAnchor.constraint(equalToConstant: 34),
+            imageView.widthAnchor.constraint(equalToConstant: Constants.imageSize),
+            imageView.heightAnchor.constraint(equalToConstant: Constants.imageSize),
 
             randomButton.widthAnchor.constraint(equalToConstant: 120),
             randomButton.heightAnchor.constraint(equalToConstant: 40)
@@ -131,5 +131,6 @@ private extension CustomNavigationBar {
     struct Constants {
         static let topStackViewMargin: CGFloat = 16
         static let searchBarMargin: CGFloat = 8
+        static let imageSize: CGFloat = 34
     }
 }
