@@ -11,21 +11,10 @@ final class HomeViewController: UIViewController {
 
     // MARK: - Private Properties
     private let topBackgroundView = UIView()
-    private let navBarView = UIView()
-    private let imageView = UIImageView(image: UIImage(named: "homeview_image"))
-    private let titleLabel = UILabel()
-    private let randomButton = UIButton(type: .system)
-    private let searchBar = UISearchBar()
+    private let customNavBar = CustomNavigationBar()
 
     private let objectView = UIView()
-    private let topStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.spacing = 8
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
+
     private let loadingImageView = UIImageView()
     private let objectImageView = UIImageView()
     private let activityIndicator = UIActivityIndicatorView(style: .medium)
@@ -44,8 +33,12 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemGray6
 
-        fetchArtObjectIfNeeded()
+        customNavBar.onRandomButtonTapped = { [weak self] in
+                    self?.didTapRandomButton()
+                }
+
         setupUI()
+        fetchArtObjectIfNeeded()
     }
 
     // Скрываем UINavigationController, который сделали в TabBarController
@@ -65,48 +58,7 @@ final class HomeViewController: UIViewController {
         // Настраиваем область для кастомного навбара
         topBackgroundView.backgroundColor = .systemBackground
         view.addSubview(topBackgroundView)
-
-        // Настраиваем навбар
-        navBarView.backgroundColor = .systemBackground
-        view.addSubview(navBarView)
-
-        // Настраиваем лейбл заголовка и сам заголовок
-        imageView.contentMode = .scaleAspectFit
-
-        titleLabel.text = "ArtCollection"
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 24)
-
-        // Настраиваем кнопку на навбаре
-        randomButton.setTitle("Random", for: .normal)
-        randomButton.setTitleColor(.black, for: .normal)
-        randomButton.setTitleColor(.lightGray, for: .disabled) // Устанавливаем цвет для disabled
-        randomButton.backgroundColor = .white
-        randomButton.layer.cornerRadius = 10
-        randomButton.layer.borderWidth = 1
-        randomButton.layer.borderColor = UIColor.lightGray.cgColor
-        randomButton.setImage(UIImage(systemName: "shuffle"), for: .normal)
-        randomButton.tintColor = .black
-        randomButton.isEnabled = false
-
-        // Добавляем обработчики событий для изменения цвета границы
-        randomButton.addTarget(self, action: #selector(buttonTouchDown), for: .touchDown)
-        randomButton.addTarget(self, action: #selector(buttonTouchUp), for: [.touchUpInside, .touchUpOutside, .touchCancel])
-
-        // Обработчик для нажатия
-        randomButton.addTarget(self, action: #selector(didTapRandomButton), for: .touchUpInside)
-
-        // Настраиваем строку поиска
-        searchBar.placeholder = "Search artworks or artists..."
-        searchBar.backgroundImage = UIImage()
-
-        // Добавляем элементы в topStackView
-        topStackView.addArrangedSubview(imageView)
-        topStackView.addArrangedSubview(titleLabel)
-        topStackView.addArrangedSubview(randomButton)
-
-        // Добавляем элементы в navBarView
-        navBarView.addSubview(topStackView)
-        navBarView.addSubview(searchBar)
+        view.addSubview(customNavBar)
     }
 
     private func setupRoundedView() {
@@ -172,7 +124,9 @@ final class HomeViewController: UIViewController {
         classificationLabel.layer.cornerRadius = 5
         classificationLabel.clipsToBounds = true
         classificationLabel.isEnabled = false
-        classificationLabel.contentEdgeInsets = UIEdgeInsets(top: 3, left: 6, bottom: 3, right: 6)  // Добавляем отступы
+        classificationLabel.contentEdgeInsets = UIEdgeInsets(top: 3, left: 6, bottom: 3, right: 6)
+
+        // Добавляем отступы
         objectView.addSubview(classificationLabel)
 
         // Настройка для heartButton
@@ -193,11 +147,7 @@ final class HomeViewController: UIViewController {
     // MARK: - Layout
     private func setupLayout() {
         topBackgroundView.translatesAutoresizingMaskIntoConstraints = false
-        navBarView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        randomButton.translatesAutoresizingMaskIntoConstraints = false
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        customNavBar.translatesAutoresizingMaskIntoConstraints = false
 
         objectView.translatesAutoresizingMaskIntoConstraints = false
         loadingImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -211,19 +161,8 @@ final class HomeViewController: UIViewController {
         heartButton.translatesAutoresizingMaskIntoConstraints = false
         infoButton.translatesAutoresizingMaskIntoConstraints = false
 
-        // Настраиваем отступы у иконки, кнопки и кэпшна внутри
-        randomButton.imageView?.contentMode = .scaleAspectFit
-        randomButton.imageEdgeInsets = UIEdgeInsets(top: 5, left: -5, bottom: 5, right: 10)
-        randomButton.titleEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
-        randomButton.contentEdgeInsets = UIEdgeInsets(top: 7, left: 5, bottom: 7, right: 5)
-
         // Устанавливаем констрейнты:
         NSLayoutConstraint.activate([
-            // Для navBarView
-            navBarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            navBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            navBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            navBarView.heightAnchor.constraint(equalToConstant: 120),
 
             // Для сейфзоны сверху
             topBackgroundView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -231,35 +170,22 @@ final class HomeViewController: UIViewController {
             topBackgroundView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             topBackgroundView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
 
-            // Для topStackView и searchBar
-            topStackView.topAnchor.constraint(equalTo: navBarView.topAnchor, constant: 16),
-            topStackView.leadingAnchor.constraint(equalTo: navBarView.leadingAnchor, constant: 16),
-            topStackView.trailingAnchor.constraint(equalTo: navBarView.trailingAnchor, constant: -16),
-
-            searchBar.topAnchor.constraint(equalTo: topStackView.bottomAnchor, constant: 8),
-            searchBar.leadingAnchor.constraint(equalTo: navBarView.leadingAnchor, constant: 8),
-            searchBar.trailingAnchor.constraint(equalTo: navBarView.trailingAnchor, constant: -8),
-            searchBar.bottomAnchor.constraint(equalTo: navBarView.bottomAnchor, constant: -8),
-            searchBar.heightAnchor.constraint(equalToConstant: 36),
-
-            // Для изображения на кнопке
-            imageView.widthAnchor.constraint(equalToConstant: 34),
-            imageView.heightAnchor.constraint(equalToConstant: 34),
-
-            // Фиксированные размеры для кнопки
-            randomButton.widthAnchor.constraint(equalToConstant: 120),
-            randomButton.heightAnchor.constraint(equalToConstant: 40),
+            // Для navBarView
+            customNavBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            customNavBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            customNavBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            customNavBar.heightAnchor.constraint(equalToConstant: 120),
 
             // Для области с объектом
-            objectView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 130),
+            objectView.topAnchor.constraint(equalTo: customNavBar.bottomAnchor, constant: 10),
             objectView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12),
             objectView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12),
             objectView.heightAnchor.constraint(equalToConstant: 500),
 
             // Начальные констрейнты для loadingImageView
-            loadingImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 130),
-            loadingImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12),
-            loadingImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12),
+            loadingImageView.topAnchor.constraint(equalTo: objectView.topAnchor),
+            loadingImageView.leadingAnchor.constraint(equalTo: objectView.leadingAnchor),
+            loadingImageView.trailingAnchor.constraint(equalTo: objectView.trailingAnchor),
             loadingImageView.heightAnchor.constraint(equalToConstant: 360),
 
             // Для objectImageView
@@ -313,14 +239,7 @@ final class HomeViewController: UIViewController {
         ])
     }
 
-    // MARK: - Button Actions
-    @objc private func buttonTouchDown() {
-        randomButton.layer.borderColor = UIColor.lightGray.cgColor // Изменяем цвет границы при нажатии
-    }
-
-    @objc private func buttonTouchUp() {
-        randomButton.layer.borderColor = UIColor.black.cgColor // Возвращаем цвет границы при отпускании
-    }
+//     MARK: - Button Actions
 
     @objc
     private func didTapRandomButton() {
@@ -331,8 +250,7 @@ final class HomeViewController: UIViewController {
         // Очищаем изображения и показываем индикатор загрузки
         objectImageView.image = nil
         loadingImageView.image = nil
-        randomButton.isEnabled = false
-        randomButton.layer.borderColor = UIColor.lightGray.cgColor
+        self.customNavBar.setRandomButtonEnabled(false)
 
         // Скрываем objectView и показываем loadingImageView
         objectView.isHidden = true
@@ -446,8 +364,7 @@ final class HomeViewController: UIViewController {
             self.loadingImageView.isHidden = true
             self.objectView.isHidden = false
             self.placeholderImageView.isHidden = false
-            self.randomButton.isEnabled = true
-            self.randomButton.layer.borderColor = UIColor.black.cgColor
+            self.customNavBar.setRandomButtonEnabled(true)
         }
     }
 
@@ -491,7 +408,7 @@ final class HomeViewController: UIViewController {
                 switch result {
                 case .success(let image):
                     self?.objectImageView.image = image
-                    self?.randomButton.isEnabled = true
+                    self?.customNavBar.setRandomButtonEnabled(true)
                     self?.loadingImageView.isHidden = true
                     self?.placeholderImageView.isHidden = true
                     self?.objectView.isHidden = false
@@ -501,7 +418,7 @@ final class HomeViewController: UIViewController {
                     self?.loadingImageView.isHidden = true
                     self?.objectView.isHidden = false
                     self?.placeholderImageView.isHidden = false
-                    self?.randomButton.isEnabled = true
+                    self?.customNavBar.setRandomButtonEnabled(true)
                 }
             }
         }
